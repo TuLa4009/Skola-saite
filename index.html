@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="lv" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tautas programma «Vienotā Latvija» — Politiskā partija</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    colors: {
+                        vl: {
+                            crimson: '#8B1E2A',
+                            crimsonDark: '#69141E',
+                            crimsonSoft: '#F9F1F2',
+                            graphite: '#2B2F33',
+                            slateDark: '#474D54',
+                            slateMid: '#6C7075',
+                            wagtailGrey: '#8E9296',
+                            lightGrey: '#D8DADC',
+                            softBg: '#F3F4F6',
+                            border: '#E2E5E9',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* =====================================================================
+           STYLES — Vienotā Latvija (krāsas no logotipa: #8B1E2A, #2B2F33, #8E9296, #D8DADC, #FFFFFF)
+           ===================================================================== */
+        body {
+            background-color: #FFFFFF;
+            color: #2B2F33;
+        }
+
+        .hero-surface-vl {
+            background:
+                radial-gradient(circle at 82% 22%, rgba(255, 255, 255, 0.14), transparent 44%),
+                linear-gradient(122deg, #69141E 0%, #8B1E2A 46%, #474D54 82%, #2B2F33 100%);
+        }
+
+        .cover-card-vl {
+            background:
+                radial-gradient(circle at 75% 18%, rgba(255, 255, 255, 0.2), transparent 45%),
+                linear-gradient(150deg, #9B2230 0%, #8B1E2A 48%, #474D54 85%, #2B2F33 100%);
+            box-shadow: 0 24px 50px rgba(43, 47, 51, 0.34);
+        }
+
+        .toc-active {
+            background-color: #F9F1F2;
+            color: #8B1E2A;
+            font-weight: 700;
+            border-left: 3px solid #8B1E2A;
+        }
+
+        mark.vl-mark {
+            background-color: #FDE68A;
+            color: #2B2F33;
+            padding: 0 0.2rem;
+            border-radius: 0.2rem;
+            font-weight: 600;
+        }
+
+        @media print {
+            header,
+            #saturs-menu,
+            #toast-box,
+            #search-bar-box,
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #FFFFFF !important;
+                color: #000000 !important;
+            }
+            .hero-surface-vl {
+                background: #8B1E2A !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            section,
+            article {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-vl-crimson selection:text-white">
+
+    <!-- Paziņojumu josla -->
+    <div id="toast-box" role="status" aria-live="polite" class="hidden fixed bottom-5 right-5 z-50 max-w-sm bg-vl-graphite text-white text-sm font-medium px-4 py-3 rounded-xl shadow-2xl border-l-4 border-vl-crimson">
+        <span id="toast-box-text"></span>
+    </div>
+
+    <!-- AUGŠĒJĀ JOSLA -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-vl-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 sm:h-24 flex items-center justify-between gap-4">
+            <!-- Kreisi: liels logotips bez rāmja, apmales vai fona kastes -->
+            <div class="flex items-center gap-4 min-w-0">
+                <a href="#sakums" title="Vienotā Latvija — Politiskā partija" aria-label="Vienotā Latvija — Politiskā partija" class="inline-flex items-center shrink-0 focus:outline-none">
+                    <img id="header-logo-img" src="logo1.jpg" alt="VIENOTĀ LATVIJA — POLITISKĀ PARTIJA" class="w-28 sm:w-36 md:w-40 h-auto block select-none bg-white brightness-110 contrast-115">
+                </a>
+                <span class="hidden sm:inline-block h-7 w-px bg-vl-border"></span>
+                <span class="text-sm sm:text-base font-bold text-vl-graphite truncate">Tautas programma 2026</span>
+            </div>
+
+            <!-- Labi: nolaižamā izvēlne «Saturs» -->
+            <div class="relative shrink-0">
+                <button type="button" id="saturs-btn" onclick="toggleSatursMenu(event)" aria-expanded="false" aria-controls="saturs-menu" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-vl-softBg hover:bg-vl-crimsonSoft text-vl-graphite hover:text-vl-crimson border border-vl-border text-xs sm:text-sm font-bold transition">
+                    <span>☰ Saturs</span>
+                    <span class="text-vl-slateMid">▾</span>
+                </button>
+
+                <nav id="saturs-menu" aria-label="Ātrā satura izvēlne" class="hidden absolute right-0 mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-vl-border p-2 z-50 max-h-[80vh] overflow-y-auto">
+                    <a href="#ievads" onclick="closeSatursMenu()" class="block px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                        I. Ievads
+                    </a>
+                    <div class="my-1 border-t border-vl-border"></div>
+                    <div class="px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-vl-slateMid">
+                        II. Četri izaicinājumi
+                    </div>
+                    <a href="#izaicinajums-1" onclick="closeSatursMenu()" class="block px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                        1. Demogrāfija un labklājīga ģimene
+                    </a>
+                    <a href="#izaicinajums-2" onclick="closeSatursMenu()" class="block px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                        2. Kvalitatīva ekonomiskā izaugsme
+                    </a>
+                    <a href="#izaicinajums-3" onclick="closeSatursMenu()" class="block px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                        3. Mūsdienīgs darba tirgus un sociālais taisnīgums
+                    </a>
+                    <a href="#izaicinajums-4" onclick="closeSatursMenu()" class="block px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                        4. Tehnoloģiskā attīstība un inovācijas
+                    </a>
+                    <div class="my-1 border-t border-vl-border"></div>
+                    <div class="px-3.5 py-1 text-[11px] font-extrabold uppercase tracking-wider text-vl-slateMid">
+                        III. Prioritātes (1.1.–4.3.)
+                    </div>
+                    <div id="dropdown-priorities-list" class="space-y-0.5"></div>
+                    <div class="my-1 border-t border-vl-border"></div>
+                    <a href="#partijas-biedri" onclick="closeSatursMenu()" class="block px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                        IV. Partijas biedri
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- GALVENAIS BANERIS (HERO) -->
+    <section id="sakums" class="relative overflow-hidden hero-surface-vl text-white border-b border-vl-border">
+        <svg viewBox="0 0 1440 720" preserveAspectRatio="none" class="pointer-events-none absolute inset-0 w-full h-full opacity-90" aria-hidden="true">
+            <path d="M 790 -60 C 1025 95, 1140 375, 935 760" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="56"/>
+            <path d="M 930 -80 C 1185 120, 1290 420, 1085 780" fill="none" stroke="#8B1E2A" stroke-width="46" opacity="0.72"/>
+            <path d="M 1065 -60 C 1310 150, 1405 445, 1230 780" fill="none" stroke="rgba(216,218,220,0.2)" stroke-width="34"/>
+        </svg>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] text-white">
+                        Tautas programma<br>
+                        «Vienotā Latvija»
+                    </h1>
+
+                    <div class="space-y-3 pt-1 max-w-xl">
+                        <a href="#prioritates" class="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-white hover:bg-vl-softBg text-vl-graphite text-sm sm:text-base font-extrabold shadow-lg transition">
+                            <span>Skatīt prioritātes</span>
+                            <span class="text-vl-crimson">↓</span>
+                        </a>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button type="button" onclick="focusSidebarToc()" class="inline-flex items-center justify-center px-5 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 text-sm font-bold transition">
+                                Atvērt satura rādītāju
+                            </button>
+                            <button type="button" onclick="downloadProgramHtml()" class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/15 hover:bg-white/25 text-white border border-white/30 text-sm font-bold transition">
+                                <span>↓ Lejupielādēt bukletu</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-10 pt-2">
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-black leading-none text-white">4</div>
+                            <div class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-white/80 mt-1.5">
+                                IZAICINĀJUMI
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-3xl sm:text-4xl font-black leading-none text-white">15</div>
+                            <div class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-white/80 mt-1.5">
+                                PRIORITĀŠU PUNKTI
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Programmas vāka kartīte -->
+                <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                    <div class="relative w-64 sm:w-72 md:w-80 aspect-[3/4.15] rounded-3xl cover-card-vl border border-white/25 p-6 sm:p-7 flex flex-col justify-between transform lg:rotate-2 hover:rotate-0 transition duration-300">
+                        <div class="flex items-start justify-between gap-3">
+                            <img id="cover-logo-img" src="logo1.jpg" alt="Vienotā Latvija" class="w-24 sm:w-28 h-auto rounded-2xl bg-white p-2 shadow-sm select-none">
+                            <span class="text-[11px] font-extrabold uppercase tracking-widest text-white/85">2026</span>
+                        </div>
+
+                        <div class="my-auto py-3">
+                            <div class="text-2xl sm:text-3xl font-black uppercase leading-tight tracking-tight text-white">
+                                TAUTAS<br>
+                                PROGRAMMA<br>
+                                <span class="text-vl-lightGrey">«VIENOTĀ<br>LATVIJA»</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2 pt-3 border-t border-white/25">
+                            <div class="h-1.5 w-full rounded-full bg-white/95"></div>
+                            <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-white/85">
+                                <span>Politiskā partija</span>
+                                <span>Latvija</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PAMATNES SATURS -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <!-- Kreisā satura rādītāja josla -->
+            <aside id="sidebar-toc-panel" class="lg:col-span-4 bg-vl-softBg rounded-2xl p-4 sm:p-5 border border-vl-border lg:sticky lg:top-28 transition">
+                <div class="flex items-center justify-between gap-2 pb-3 mb-3 border-b border-vl-border">
+                    <h2 class="text-sm font-black uppercase tracking-wider text-vl-graphite">
+                        Saturs
+                    </h2>
+                    <button type="button" onclick="window.print()" class="no-print text-xs font-bold text-vl-slateMid hover:text-vl-crimson transition">
+                        Drukāt
+                    </button>
+                </div>
+
+                <!-- Meklēšana tekstā un prioritātēs -->
+                <div id="search-bar-box" class="mb-4 space-y-2">
+                    <input type="search" id="program-search-input" oninput="runProgramSearch()" placeholder="Meklēt programmā un prioritātēs..." aria-label="Meklēt programmā un prioritātēs" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-vl-border text-sm text-vl-graphite placeholder:text-vl-wagtailGrey focus:outline-none focus:ring-2 focus:ring-vl-crimson">
+                    <div id="search-summary-row" class="hidden flex items-center justify-between text-xs px-1">
+                        <span id="search-summary-label" class="font-semibold text-vl-slateDark"></span>
+                        <button type="button" onclick="clearProgramSearch()" class="font-bold text-vl-crimson hover:underline">
+                            Notīrīt
+                        </button>
+                    </div>
+                </div>
+
+                <nav id="sidebar-nav-tree" aria-label="Satura rādītājs" class="space-y-1.5 max-h-[62vh] overflow-y-auto pr-1 text-xs sm:text-sm">
+                    <a href="#ievads" data-nav-id="ievads" class="sidebar-nav-link block px-3 py-2 rounded-xl font-bold text-vl-graphite hover:bg-white transition">
+                        I. Ievads
+                    </a>
+
+                    <div class="pt-2">
+                        <div class="px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-vl-slateMid">
+                            II. Četri izaicinājumi
+                        </div>
+                        <a href="#izaicinajums-1" data-nav-id="izaicinajums-1" class="sidebar-nav-link block px-3 py-1.5 rounded-xl font-medium text-vl-graphite hover:bg-white transition">
+                            1. Demogrāfija un labklājīga ģimene
+                        </a>
+                        <a href="#izaicinajums-2" data-nav-id="izaicinajums-2" class="sidebar-nav-link block px-3 py-1.5 rounded-xl font-medium text-vl-graphite hover:bg-white transition">
+                            2. Kvalitatīva ekonomiskā izaugsme
+                        </a>
+                        <a href="#izaicinajums-3" data-nav-id="izaicinajums-3" class="sidebar-nav-link block px-3 py-1.5 rounded-xl font-medium text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition">
+                            3. Mūsdienīgs darba tirgus un sociālais taisnīgums
+                        </a>
+                        <a href="#izaicinajums-4" data-nav-id="izaicinajums-4" class="sidebar-nav-link block px-3 py-1.5 rounded-xl font-medium text-vl-graphite hover:bg-white transition">
+                            4. Tehnoloģiskā attīstība un inovācijas
+                        </a>
+                    </div>
+
+                    <div class="pt-2">
+                        <a href="#prioritates" data-nav-id="prioritates" class="sidebar-nav-link block px-3 py-2 rounded-xl font-extrabold text-vl-crimson hover:bg-white transition">
+                            III. Prioritātes (1.1.–4.3.)
+                        </a>
+                        <div id="sidebar-priorities-links" class="mt-1 space-y-1.5"></div>
+                    </div>
+
+                    <div class="pt-2">
+                        <a href="#partijas-biedri" data-nav-id="partijas-biedri" class="sidebar-nav-link block px-3 py-2 rounded-xl font-bold text-vl-graphite hover:bg-white transition">
+                            IV. Partijas biedri
+                        </a>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- Labā kolonna: I. Ievads, II. Četri izaicinājumi, III. Prioritātes un IV. Partijas biedri -->
+            <div class="lg:col-span-8 space-y-10">
+
+                <!-- I. IEVADS -->
+                <section id="ievads" class="searchable-section bg-white rounded-2xl p-6 sm:p-9 border border-vl-border shadow-2xs">
+                    <div class="border-l-4 border-vl-crimson pl-5 sm:pl-6 space-y-4">
+                        <div class="text-xs font-extrabold uppercase tracking-widest text-vl-crimson">
+                            I. Ievads
+                        </div>
+                        <p class="searchable-copy text-lg sm:text-xl text-vl-graphite leading-relaxed font-medium">
+                            Šajos sarežģītajos laikos mūsu valstij jārisina četri galvenie izaicinājumi: demogrāfiskā situācija, ekonomiskās izaugsmes kvalitāte, radikālas izmaiņas darba tirgū, kā arī globālā tehnoloģiskā revolūcija.
+                        </p>
+                        <p class="searchable-copy text-lg sm:text-xl text-vl-graphite leading-relaxed font-medium">
+                            Partija „Vienota Latvija” ir gatava ar lepnumu pieņemt šos izaicinājumus un sniegt tiem pienācīgu atbildi. Mēs pārvarēsim visus šķēršļus cīņā par mūsu tiesībām uz savu suverēno attīstību
+                        </p>
+                    </div>
+                </section>
+
+                <!-- II. ČETRI IZAICINĀJUMI -->
+                <section id="izaicinajumi" class="space-y-8">
+                    <div class="bg-vl-softBg rounded-2xl px-6 py-5 border border-vl-border">
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-vl-crimson">
+                            Politiskā programma
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-black text-vl-graphite mt-1">
+                            II. Četri izaicinājumi
+                        </h2>
+                    </div>
+
+                    <!-- 1. DEMOGRĀFIJA UN LABKLĀJĪGA ĢIMENE -->
+                    <article id="izaicinajums-1" class="searchable-section bg-white rounded-2xl p-6 sm:p-8 border border-vl-border shadow-2xs space-y-4 text-base sm:text-[17px] leading-relaxed text-vl-graphite">
+                        <h3 class="searchable-copy text-xl sm:text-2xl font-black text-vl-crimson pb-3 border-b border-vl-border">
+                            1. DEMOGRĀFIJA UN LABKLĀJĪGA ĢIMENE
+                        </h3>
+                        <p class="searchable-copy">Latvija – tā ir, pirmkārt, cilvēki. Un jo mūs ir vairāk, jo spēcīgāka un veiksmīgāka ir mūsu valsts.</p>
+                        <p class="searchable-copy">Mūsu neapstrīdama prioritāte ir dzimstības veicināšana, atbalsts ģimenēm ar bērniem un tādu apstākļu radīšana, lai jaunieši paliktu dzīvot un strādāt dzimtenē, bet izceļojušie tautieši atgrieztos Latvijā. Cilvēku vēlme un iespējas veidot ģimenes un audzināt bērnus ir mūsu valsts nākotnes pamats.</p>
+                        <p class="searchable-copy">Mājokļu pieejamība, kvalitatīva izglītība un veselības aprūpe, pienācīgi valsts un pašvaldību pabalsti ģimenēm ar bērniem, efektīva sociālās palīdzības sistēma – tie ir obligāti priekšnoteikumi, lai uzlabotu iedzīvotāju dzīves kvalitāti. Turklāt jauniešu attīstības iespējas, iespēja iegūt mūsdienīgu izglītību un atrast pienācīgu nodarbinātību visos Latvijas reģionos un apgabalos bez izņēmuma – tas ir priekšnoteikums vienmērīgai visas valsts attīstībai.</p>
+                        <p class="searchable-copy">Mēs turpināsim īstenot bērnudārzu, skolu, arodskolu un augstskolu modernizācijas un remonta programmas, kā arī atbalstīsim mūsdienīgu studentu pilsētiņu attīstību un kopmītņu atjaunošanu. Īpašu uzmanību pievērsīsim skolotāju, augstskolu pasniedzēju un profesionālās izglītības pasniedzēju atbalstam, kuru ieguldījums Latvijas nākotnē ir nenovērtējams un kuru darbs ir jāatalgo pienācīgi.</p>
+                        <p class="searchable-copy">Mūsu galvenais uzdevums ir uzlabot medicīnas kvalitāti un pieejamību, kā arī samazināt rindas pie ārstiem un uz izmeklējumiem. Veselības aprūpei jāiet līdzi laikam. Tas nozīmē aktīvu digitālo tehnoloģiju ieviešanu, mūsdienīgu zāļu pieejamību, savlaicīgu profilaksi un slimību agrīnu diagnostiku.</p>
+                        <p class="searchable-copy">Partijas uzmanības centrā ir rūpes par vecāko paaudzi. Mēs nodrošināsim pakāpenisku pensiju un sociālo pabalstu pieaugumu, pieejamu medicīnisko aprūpi un kompensējamas zāles, kā arī paplašināsim rehabilitācijas un aktīvas ilgmūžības programmas pašvaldībās. Mēs darīsim visu, lai mūsu seniori justos aizsargāti, varētu, ja vēlas, palikt pieprasīti savā profesijā un sabiedriskajā dzīvē, nodarboties ar sportu, radošām aktivitātēm un pavadīt vairāk laika kopā ar saviem bērniem un mazbērniem.</p>
+                    </article>
+
+                    <!-- 2. KVALITATĪVA EKONOMISKĀ IZAUGSME -->
+                    <article id="izaicinajums-2" class="searchable-section bg-white rounded-2xl p-6 sm:p-8 border border-vl-border shadow-2xs space-y-4 text-base sm:text-[17px] leading-relaxed text-vl-graphite">
+                        <h3 class="searchable-copy text-xl sm:text-2xl font-black text-vl-crimson pb-3 border-b border-vl-border">
+                            2. KVALITATĪVA EKONOMISKĀ IZAUGSME
+                        </h3>
+                        <p class="searchable-copy">Šodien Latvijas ekonomikai ir nepieciešams jauns spēcīgs impulss, lai panāktu un apsteigtu kaimiņvalstis Baltijas reģionā. Mūsu uzdevums ir daudzkārt palielināt visu nozaru efektivitāti un tehnoloģisko aprīkojumu, kā arī vietējās produkcijas, preču un pakalpojumu konkurētspēju gan iekšzemes, gan Eiropas un pasaules tirgos.</p>
+                        <p class="searchable-copy">Mūsu partija ir gatava sniegt visu nepieciešamo atbalstu Latvijas uzņēmumiem un uzņēmējiem. Mēs radīsim labvēlīgus apstākļus, lai piesaistītu investīcijas jauniem projektiem. Mēs izveidosim stimulus ekonomikas attīstībai, kas balstās uz vietējās ražošanas ar augstu pievienoto vērtību paplašināšanu, uzņēmumu un darbavietu izveidi un modernizāciju, mazo un vidējo uzņēmumu lomas stiprināšanu, mūsu pilsoņu uzņēmējdarbības iniciatīvu, inovāciju un digitālo risinājumu ieviešanu.</p>
+                        <p class="searchable-copy">Ekonomiskā izaugsme — tas ir stabils algu un latviešu ģimeņu labklājības pieaugums, jaunas perspektīvas jauniešiem, lai viņiem nevajadzētu pamest dzimteni un meklēt darbu ārzemēs, kā arī pieprasījums pēc mūsu zinātnes centru un tehnoloģisko start-up uzņēmumu izstrādājumiem. Tā ir mūsu atbilde uz globālajām ekonomiskajām krīzēm, inflāciju un jebkādiem ārējiem izaicinājumiem.</p>
+                        <p class="searchable-copy">Partijas prioritāte ir mazo un vidējo uzņēmumu, ekotūrisma un radošo nozaru atbalsts. Mēs turpināsim uzlabot nodokļu un uzņēmējdarbības vidi, likvidēt birokrātiskos šķēršļus, kas traucē godīgu uzņēmējdarbību, kā arī vienkāršot administratīvās procedūras.</p>
+                        <p class="searchable-copy">Mēs turpināsim atjaunot un stiprināt Latvijas rūpniecības konkurētspēju. Mūsu valstij ir milzīgs izaugsmes potenciāls farmācijas, ķīmijas rūpniecības, augsto tehnoloģiju kokapstrādes, pārtikas rūpniecības un IT nozarē. Mums joprojām ir svarīgi atbalstīt Latvijas laukus, mūsu lauksaimniekus un lauksaimniecības ražotājus, un, kas ir vissvarīgāk, – nodrošināt valsts pārtikas drošību.</p>
+                        <p class="searchable-copy">Mēs attīstīsim Latvijas transporta infrastruktūru, integrējot to efektīvos Eiropas loģistikas koridoros, tostarp īstenojot modernus dzelzceļa un autoceļu projektus, kā arī attīstot mūsu ostas. Tas nodrošinās labāku reģionu savienojamību ar galvaspilsētu, dos impulsu jauniem rūpniecības projektiem, ļaus palielināt Latvijas preču eksportu un palīdzēs pilnīgāk izmantot mūsu valsts tranzīta potenciālu tirdzniecības ceļu krustpunktā. Eksporta attīstība palielinās pieprasījumu pēc mūsu produkcijas un veicinās jaunu, labi apmaksātu darbavietu radīšanu.</p>
+                        <p class="searchable-copy">Partija turpinās atbalstīt pieejamu un videi draudzīgu enerģētikas tehnoloģiju ieviešanu, tostarp vēja un saules enerģētiku, elektrotīklu modernizāciju un ēku energoefektivitātes paaugstināšanu. Mēs strādāsim, lai tīkla pieslēguma izmaksas un enerģijas tarifi rūpniecības uzņēmumiem, mājsaimniecībām un sociālajām iestādēm būtu pieejami un prognozējami.</p>
+                    </article>
+
+                    <!-- 3. MŪSDIENĪGS DARBA TIRGUS UN SOCIĀLAIS TAISNĪGUMS -->
+                    <article id="izaicinajums-3" class="searchable-section bg-white rounded-2xl p-6 sm:p-8 border border-vl-border shadow-2xs space-y-4 text-base sm:text-[17px] leading-relaxed text-vl-graphite">
+                        <h3 class="searchable-copy text-xl sm:text-2xl font-black text-vl-crimson pb-3 border-b border-vl-border">
+                            3. MŪSDIENĪGS DARBA TIRGUS UN SOCIĀLAIS TAISNĪGUMS
+                        </h3>
+                        <p class="searchable-copy">Struktūras un tehnoloģiskās pārmaiņas ekonomikā un sociālajā jomā maina daudzu tradicionālo profesiju raksturu un prasības, kā arī veicina jaunu specialitāšu rašanos. Šīm pārmaiņām ir jābūt par labu Latvijas iedzīvotājiem, tām jāpaver viņiem jaunas iespējas, nevis jārada problēmas.</p>
+                        <p class="searchable-copy">Partijas uzdevums ir nodrošināt sabalansētu darba tirgus modernizāciju. Mēs neatstāsim nevienu vienatnē ar radušajām grūtībām, darīsim visu, lai aizsargātu cilvēkus no bezdarba, sagatavotu darbaspēku jaunajām ekonomikas nozarēm un nodrošinātu tradicionālo nozaru stabilu darbību.</p>
+                        <p class="searchable-copy">Katram iedzīvotājam jābūt iespējai pilnībā realizēt savu potenciālu, nomainīt mazkvalificētu vai novecojošu profesiju pret pieprasītu, mūsdienīgu un labi apmaksātu profesiju, tādējādi nodrošinot savas ģimenes labklājību. Tāpēc ir svarīgi nodrošināt cilvēkiem visā darba dzīves laikā pieejamas iespējas apgūt jaunas zināšanas, paaugstināt kvalifikāciju vai pārkvalificēties, izmantojot valsts un Eiropas pieaugušo izglītības programmas, atbilstoši mainīgajām tirgus prasībām.</p>
+                        <p class="searchable-copy">Mūsu galvenā prioritāte ir turpināt paaugstināt darba ražīgumu, piesaistot investīcijas, modernizējot rūpniecību, sociālo sfēru un valsts pārvaldes sistēmu, tostarp izmantojot digitalizāciju, automatizāciju un robotizāciju. Partijas principiālā nostāja ir tāda, ka darba ražīguma pieaugumam un ekonomikas efektivitātes paaugstināšanai ir jāveicina algu pieaugums, kas tieši ietekmē Latvijas ģimeņu dzīves līmeni un tuvinātu to Eiropas Savienības vidējiem rādītājiem.</p>
+                        <p class="searchable-copy">Svarīgi ir arī tas, ka tehnoloģijas, pirmkārt mākslīgā intelekta un automatizācijas jomā, ne tikai maina dzīvesveidu, bet arī atbrīvo cilvēka radošo potenciālu. Mēs vienmēr esam lepojušies ar Latvijas iedzīvotāju talantiem. Šodien šī radošā enerģija ir jāvirza uz jaunu izstrādājumu, nākotnes nozaru un radošo industriju atbalstu.</p>
+                        <p class="searchable-copy">Partija pievērš īpašu uzmanību tiem, kuri rūpējas par valsts drošību un kārtību: Nacionālo bruņoto spēku karavīriem, robežsargiem, policistiem un glābējiem. Viņi ik dienas aizsargā Latviju un tās iedzīvotājus, un valstij ir pienākums nodrošināt viņiem pienācīgu atbalstu gan dienesta laikā, gan pēc tā beigām. Mēs attīstīsim profesionālās adaptācijas programmas, palīdzot bijušajiem karavīriem un drošības dienestu darbiniekiem izmantot savu pieredzi valsts pārvaldē, izglītības sistēmā, jauniešu patriotiskajā audzināšanā un uzņēmējdarbībā, kā arī turpināsim stiprināt sociālās garantijas viņiem un viņu ģimenēm.</p>
+                        <p class="searchable-copy">Mēs konsekventi centīsimies panākt ģimeņu ienākumu un labklājības pieaugumu, veicināsim to, lai valsts sociālā, ekonomiskā un nodokļu politika būtu vērsta tieši uz šiem mērķiem, tostarp samazinot nodokļu slogu darbaspēkam. Galvenā prioritāte ir dzīves apstākļu uzlabošana cilvēkiem ar zemiem ienākumiem un tām iedzīvotāju grupām, kurām īpaši nepieciešama valsts un pašvaldību palīdzība. Mēs turpināsim attīstīt efektīvas mērķtiecīgas sociālās atbalsta programmas.</p>
+                        <p class="searchable-copy">Partija „Vienota Latvija” turpinās konsekventi un atbildīgi pārraudzīt migrācijas politiku, rūpējoties par valsts drošību un darba tirgu. Ceļš uz Latviju, lai šeit dzīvotu un strādātu, jāatver tikai tiem, kuri ciena mūsu likumus, kultūru un tradīcijas, ir gatavi godīgi strādāt, integrēties sabiedrībā un sniegt reālu labumu valstij.</p>
+                    </article>
+
+                    <!-- 4. TEHNOLOĢISKĀ ATTĪSTĪBA UN INOVĀCIJAS -->
+                    <article id="izaicinajums-4" class="searchable-section bg-white rounded-2xl p-6 sm:p-8 border border-vl-border shadow-2xs space-y-4 text-base sm:text-[17px] leading-relaxed text-vl-graphite">
+                        <h3 class="searchable-copy text-xl sm:text-2xl font-black text-vl-crimson pb-3 border-b border-vl-border">
+                            4. TEHNOLOĢISKĀ ATTĪSTĪBA UN INOVĀCIJAS
+                        </h3>
+                        <p class="searchable-copy">Šodien pasaule piedzīvo īstu tehnoloģisko revolūciju. Turpmākajos gados mums ierastās ierīces, pakalpojumi un profesijas radikāli mainīsies, un parādīsies jauni pakalpojumi, kas ietekmēs visas dzīves jomas. Lai nodrošinātu mūsu konkurētspēju un augstu dzīves līmeni iedzīvotājiem, Latvijai ir jābūt šo pārmaiņu avangardā: jānodrošina digitālo tehnoloģiju un mākslīgā intelekta, jauno izstrādājumu mūsdienu materiālu, medicīnas un biotehnoloģiju jomā, sakaru līdzekļu, 5G/6G infrastruktūras, robotikas un bezpilota transportlīdzekļu ieviešana, apsteidzot citus. Mūsu partija kopā ar valdību, pašvaldībām, zinātnisko kopienu un uzņēmējiem aktīvi piedalīsies mūsdienīgas valsts zinātnes un tehnoloģiju politikas veidošanā, kā arī likumu virzīšanā, kas veicina inovācijas un start-up uzņēmumus.</p>
+                        <p class="searchable-copy">Partija prioritāri atbalstīs inovācijas, kas vērstas uz mūsu pilsoņu veselības aizsardzību. Latvijas farmācijas nozarei un zinātnei ir spēcīgas tradīcijas un liels potenciāls.</p>
+                        <p class="searchable-copy">Mūsu ārstiem, zinātniekiem un inženieriem ir jābūt pieejamiem visiem resursiem, lai viņi varētu piedalīties starptautiskos pētījumos, jaunu zāļu un ārstēšanas metožu izstrādē. Ir jāattīsta biotehnoloģijas un personalizētā medicīna, kas balstās uz mākslīgā intelekta, liela apjoma datu analīzes un mūsdienu klīniskās prakses sintēzi. Tam visam ir jākalpo cilvēku veselībai.</p>
+                    </article>
+                </section>
+
+                <!-- III. PRIORITĀTES (1.1.–4.3.) -->
+                <section id="prioritates" class="bg-white rounded-2xl p-6 sm:p-9 border border-vl-border shadow-2xs space-y-8">
+                    <div class="pb-5 border-b border-vl-border">
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-vl-crimson">
+                            Rīcības plāns
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-black text-vl-graphite mt-1">
+                            III. Prioritātes
+                        </h2>
+                    </div>
+
+                    <div id="priorities-render-root" class="space-y-10"></div>
+                </section>
+
+                <!-- IV. PARTIJAS BIEDRI -->
+                <section id="partijas-biedri" class="searchable-section bg-white rounded-2xl p-6 sm:p-9 border border-vl-border shadow-2xs space-y-8">
+                    <div class="pb-5 border-b border-vl-border">
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-vl-crimson">
+                            Komanda
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-black text-vl-graphite mt-1">
+                            IV. Partijas biedri
+                        </h2>
+                    </div>
+
+                    <div id="members-render-root" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const PRIORITATES_DATA = [
+            {
+                id: 'cat-1',
+                title: '1. DEMOGRĀFIJA UN LABKLĀJĪGA ĢIMENE',
+                items: [
+                    {
+                        anchor: 'p-1-1',
+                        code: '1.1.',
+                        title: 'Dzimstības veicināšana un atbalsts ģimenēm ar bērniem',
+                        bullets: [
+                            'Attīstīt visaptverošu atbalsta sistēmu ģimenēm, tostarp daudzbērnu ģimenēm, visos dzīves posmos – veselības aprūpē, izglītībā un mājokļa jautājumu risināšanā',
+                            'Nodrošināt regulāru valsts ģimenes pabalstu indeksāciju un paplašināt valsts galvojuma programmas pirmajai iemaksai mājokļa iegādei vai būvniecībai ģimenēm ar bērniem',
+                            'Iniciēt papildu dzimstības veicināšanas pasākumus un pašvaldību pabalstus novados ar vissarežģītāko demogrāfisko situāciju',
+                            'Vienkāršot visu pabalstu un dokumentu noformēšanu pēc bērna piedzimšanas proaktīvā tiešsaistes formātā valsts pakalpojumu portālā bez lieku izziņu vākšanas',
+                            'Ieviest nodokļu atvieglojumus un stimulus Latvijas uzņēmumiem, kas darbiniekiem ar bērniem nodrošina elastīgu darba grafiku un papildu sociālos labumus'
+                        ]
+                    },
+                    {
+                        anchor: 'p-1-2',
+                        code: '1.2.',
+                        title: 'Tautiešu atgriešanās un jauniešu perspektīvas reģionos',
+                        bullets: [
+                            'Īstenot valsts reemigrācijas programmu, palīdzot aizbraukušajiem tautiešiem atrast darbu, atzīt diplomus, integrēt bērnus skolās un risināt mājokļa jautājumus, atgriežoties Latvijā',
+                            'Radīt apstākļus, lai jaunieši paliktu dzīvot un veidot karjeru mājās, nevis dotos peļņā uz ārzemēm',
+                            'Nodrošināt vienlīdzīgas iespējas iegūt kvalitatīvu izglītību un pienācīgu darbu visos Latvijas reģionos un novados (Kurzemē, Zemgalē, Vidzemē un Latgalē), mazinot plaisu starp galvaspilsētu un reģioniem',
+                            'Attīstīt mērķstipendiju un pirmās darbavietas programmas ar garantētu absolventu nodarbinātību reģionālajos uzņēmumos un iestādēs',
+                            'Atbalstīt pieejamu īres mājokļu būvniecību un renovāciju jaunajiem speciālistiem novadu centros un mazpilsētās'
+                        ]
+                    },
+                    {
+                        anchor: 'p-1-3',
+                        code: '1.3.',
+                        title: 'Bērnudārzu, skolu, tehnikumu un augstskolu modernizācija',
+                        bullets: [
+                            'Turpināt bērnudārzu un vispārizglītojošo skolu kapitālā remonta, siltināšanas un mūsdienīga aprīkojuma iegādes programmas visā valstī',
+                            'Likvidēt rindas uz pašvaldību bērnudārziem, paplašinot atbalstu privātajiem bērnudārziem un aukļu dienestiem tur, kur trūkst vietu',
+                            'Modernizēt profesionālo skolu un tehnikumu darbnīcas, laboratorijas un mācību bāzi ciešā sasaistē ar reālā biznesa vajadzībām',
+                            'Veicināt mūsdienīgu augstskolu pilsētiņu (kampusu), zinātnisko laboratoriju attīstību un studentu kopmītņu renovāciju',
+                            'Nodrošināt visām mācību iestādēm ātrgaitas internetu, modernas digitālās klases un pieejamu, drošu vidi ikvienam skolēnam'
+                        ]
+                    },
+                    {
+                        anchor: 'p-1-4',
+                        code: '1.4.',
+                        title: 'Atbalsts skolotājiem un mācībspēkiem',
+                        bullets: [
+                            'Nodrošināt pakāpenisku un prognozējamu atalgojuma pieaugumu skolotājiem, augstskolu mācībspēkiem un profesionālās izglītības pedagogiem',
+                            'Mazināt birokrātisko un papīru slogu pedagogiem, lai skolotāji varētu koncentrēties darbam ar skolēniem, nevis atskaitēm',
+                            'Ieviest programmas jauno pedagogu piesaistei skolām, tostarp stipendijas, mentorību un mājokļa un transporta izdevumu kompensācijas reģionos',
+                            'Paplašināt skolotāju bezmaksas kvalifikācijas paaugstināšanas iespējas mūsdienu mācību metodēs un digitālajās tehnoloģijās',
+                            'Celt pedagoga profesijas prestižu sabiedrībā, jo viņu ieguldījums Latvijas nākotnē ir izšķirošs'
+                        ]
+                    },
+                    {
+                        anchor: 'p-1-5',
+                        code: '1.5.',
+                        title: 'Pieejama un kvalitatīva medicīna bez rindām',
+                        bullets: [
+                            'Mazināt rindas uz valsts apmaksātām ārstu speciālistu konsultācijām, diagnostiku un plānveida operācijām, palielinot finansējumu un efektīvi plānojot kvotas',
+                            'Aktīvi attīstīt vienoto digitālo e-veselības sistēmu, telemedicīnu un ērtu tiešsaistes pierakstu pie ārstiem',
+                            'Paplašināt valsts kompensējamo mūsdienu medikamentu sarakstu un samazināt pacientu līdzmaksājumus aptiekās',
+                            'Stiprināt savlaicīgas profilakses, skrīninga un agrīnas diagnostikas programmas onkoloģisko, sirds un asinsvadu, kā arī hronisko slimību jomā',
+                            'Nodrošināt primārās veselības aprūpes, ģimenes ārstu prakšu un feldšerpunktu pieejamību attālos pagastos un mazās apdzīvotās vietās'
+                        ]
+                    },
+                    {
+                        anchor: 'p-1-6',
+                        code: '1.6.',
+                        title: 'Atbalsts ārstiem un medicīnas personālam',
+                        bullets: [
+                            'Nodrošināt konkurētspējīgu darba samaksu ārstiem, medmāsām, vecmātēm, jaunākajam medicīnas personālam un Neatliekamās medicīniskās palīdzības dienesta (NMPD) darbiniekiem, lai apturētu speciālistu aizplūšanu uz ārzemēm',
+                            'Paplašināt medicīnas kadru piesaistes programmas reģionālajām slimnīcām un ģimenes ārstu praksēm (pārcelšanās pabalsti, dienesta dzīvokļi, rezidentūras apmaksa)',
+                            'Uzlabot darba apstākļus ārstniecības iestādēs, nodrošinot slimnīcas ar modernu aprīkojumu un mazinot personāla virsstundas',
+                            'Stiprināt medicīnas darbinieku tiesisko un sociālo aizsardzību, kuri ik dienu glābj cilvēku dzīvības'
+                        ]
+                    },
+                    {
+                        anchor: 'p-1-7',
+                        code: '1.7.',
+                        title: 'Rūpes par vecāko paaudzi un aktīva ilgmūžība',
+                        bullets: [
+                            'Nodrošināt regulāru un taisnīgu pensiju un sociālo pabalstu indeksāciju, ņemot vērā reālo cenu pieaugumu',
+                            'Paaugstināt veselības aprūpes, aprūpes mājās pakalpojumu un kompensējamo zāļu pieejamību senioriem',
+                            'Paplašināt pašvaldībās rehabilitācijas, veselības veicināšanas un aktīvas ilgmūžības programmas',
+                            'Veidot dienas centrus, interešu klubus, sporta sekcijas un digitālās pratības kursus vecāka gadagājuma cilvēkiem katrā novadā',
+                            'Atbalstīt nodarbinātības un mentorības programmas, lai seniori pēc vēlēšanās varētu palikt pieprasīti profesijā, nodot pieredzi jauniešiem un veltīt vairāk laika ģimenei un mazbērniem'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'cat-2',
+                title: '2. KVALITATĪVA EKONOMISKĀ IZAUGSME',
+                items: [
+                    {
+                        anchor: 'p-2-1',
+                        code: '2.1.',
+                        title: 'Atbalsts mazajam un vidējam biznesam un uzņēmējdarbības iniciatīvai',
+                        bullets: [
+                            'Veidot labvēlīgu investīciju klimatu un prognozējamu nodokļu vidi privātā kapitāla piesaistei jauniem projektiem',
+                            'Paplašināt atvieglotās kreditēšanas, valsts galvojumu un grantu programmas mazajiem un vidējiem uzņēmumiem, ģimenes uzņēmumiem un jaunajiem uzņēmējiem',
+                            'Veikt administratīvo prasību revīziju, samazinot pārmērīgas pārbaudes un birokrātiskos šķēršļus, kas traucē godīgai uzņēmējdarbībai',
+                            'Pārcelt visas valsts un pašvaldību atļaujas, licences un uzņēmumu atskaites vienotā digitālā formātā bez papīra birokrātijas',
+                            'Mērķtiecīgi atbalstīt reģionālā tūrisma, ekotūrisma, amatniecības un radošo industriju attīstību'
+                        ]
+                    },
+                    {
+                        anchor: 'p-2-2',
+                        code: '2.2.',
+                        title: 'Rūpniecības attīstība ar augstu pievienoto vērtību (farmācija, IT, kokapstrāde)',
+                        bullets: [
+                            'Veicināt pāreju no lētu izejvielu eksporta uz gatavas produkcijas ražošanu ar augstu pievienoto vērtību Latvijā',
+                            'Sniegt mērķtiecīgu atbalstu galvenajām eksporta un zinātņietilpīgajām nozarēm: farmācijai, ķīmiskajai rūpniecībai, augsto tehnoloģiju kokapstrādei, pārtikas industrijai, elektronikai un IT sektoram',
+                            'Līdzfinansēt ražošanas līniju modernizāciju, robotikas ieviešanu un jaunu mūsdienīgu darbavietu radīšanu rūpniecības uzņēmumos',
+                            'Veidot industriālos parkus ar gatavu infrastruktūru reģionos ražošanas investoru piesaistei',
+                            'Virzīt Latvijas preces un zīmolus Eiropas Savienības un pasaules tirgos ar eksporta kreditēšanas programmu un tirdzniecības misiju palīdzību'
+                        ]
+                    },
+                    {
+                        anchor: 'p-2-3',
+                        code: '2.3.',
+                        title: 'Atbalsts lauksaimniekiem un valsts pārtikas drošība',
+                        bullets: [
+                            'Nodrošināt taisnīgu valsts un Eiropas subsīdiju sadali Latvijas lauksaimniekiem, zemnieku saimniecībām un kooperatīviem',
+                            'Veicināt lauksaimniecības produkcijas pārstrādi valsts iekšienē, atbalstot vietējos pārtikas ražotājus',
+                            'Palielināt kvalitatīvu vietējo produktu īpatsvaru valsts un pašvaldību iepirkumos (skolām, bērnudārziem, slimnīcām un armijai)',
+                            'Palīdzēt lauksaimniekiem tehnikas modernizācijā, zemju meliorācijā un pielāgošanā klimata pārmaiņām, lai stiprinātu Latvijas pārtikas drošību'
+                        ]
+                    },
+                    {
+                        anchor: 'p-2-4',
+                        code: '2.4.',
+                        title: 'Transporta infrastruktūras, ostu un loģistikas koridoru attīstība',
+                        bullets: [
+                            'Attīstīt mūsdienīgu valsts transporta tīklu un integrēt Latviju Eiropas transporta un loģistikas koridoros «Ziemeļi – Dienvidi» un «Austrumi – Rietumi»',
+                            'Turpināt sistēmisku valsts un reģionālo autoceļu remontu un būvniecību drošai un ātrai visu novadu savienojamībai ar galvaspilsētu',
+                            'Modernizēt dzelzceļa infrastruktūru un attīstīt multimodālus loģistikas mezglus',
+                            'Paaugstināt Latvijas ostu (Rīgas, Ventspils, Liepājas un mazo ostu) konkurētspēju un kravu apgrozījumu, pārvēršot tās par zaļās industrijas un eksporta centriem'
+                        ]
+                    },
+                    {
+                        anchor: 'p-2-5',
+                        code: '2.5.',
+                        title: 'Zaļā enerģētika un pieejami enerģijas tarifi',
+                        bullets: [
+                            'Stiprināt Latvijas enerģētisko neatkarību, attīstot vēja un saules enerģētiku, kā arī modernas enerģijas uzkrāšanas sistēmas',
+                            'Veikt maģistrālo un sadales elektrotīklu vērienīgu modernizāciju zudumu mazināšanai un energoapgādes drošuma paaugstināšanai',
+                            'Paātrināt un vienkāršot jaunu rūpniecības uzņēmumu un dzīvojamo māju pieslēgšanas procedūras energotīkliem',
+                            'Paplašināt valsts līdzfinansējuma programmas daudzdzīvokļu un privātmāju, kā arī sabiedrisko ēku siltināšanai, lai samazinātu apkures rēķinus',
+                            'Nodrošināt caurskatāmu un prognozējamu enerģijas tarifu regulēšanu mājsaimniecību aizsardzībai un Latvijas rūpnīcu konkurētspējas saglabāšanai'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'cat-3',
+                title: '3. MŪSDIENĪGS DARBA TIRGUS UN SOCIĀLAIS TAISNĪGUMS',
+                items: [
+                    {
+                        anchor: 'p-3-1',
+                        code: '3.1.',
+                        title: 'Aizsardzība pret bezdarbu un pieaugušo pārkvalifikācijas programmas',
+                        bullets: [
+                            'Garantēt sabalansētu darba tirgus modernizāciju automatizācijas apstākļos, savlaicīgi prognozējot pieprasījumu pēc nākotnes profesijām',
+                            'Paplašināt pieejamās valsts un Eiropas pieaugušo izglītības programmas, ļaujot ikvienam iedzīvotājam bez maksas vai ar minimālu līdzmaksājumu apgūt jaunu pieprasītu profesiju',
+                            'Ieviest individuālo mācību kontu sistēmu darbiniekiem, kuri vēlas paaugstināt kvalifikāciju visas darba dzīves garumā',
+                            'Nodrošināt mērķtiecīgu atbalstu un ātru pārkvalifikāciju pirmspensijas vecuma cilvēkiem un iedzīvotājiem reģionos ar paaugstinātu bezdarba līmeni',
+                            'Attīstīt duālo izglītību, kurā studenti un audzēkņi iegūst praktiskās iemaņas tieši uzņēmumos'
+                        ]
+                    },
+                    {
+                        anchor: 'p-3-2',
+                        code: '3.2.',
+                        title: 'Darba ražīguma celšana un algu pieaugums līdz ES līmenim',
+                        bullets: [
+                            'Veicināt investīcijas automatizācijā, robotikā un digitālajā pārvaldībā uzņēmumos un valsts sektorā, lai daudzkārtīgi celtu darba ražīgumu',
+                            'Panākt, lai ekonomikas efektivitātes pieaugums tieši atspoguļotos darbinieku algu kāpumā, pakāpeniski tuvinot ienākumus Latvijā vidējiem rādītājiem Eiropas Savienībā',
+                            'Atbalstīt taisnīgu darba samaksas sistēmu, koplīgumus un darbinieku darba tiesību aizsardzību',
+                            'Virzīt tehnoloģiju atbrīvoto cilvēku potenciālu zinātnē, inženierzinātnēs, uzņēmējdarbībā un radošajās industrijās'
+                        ]
+                    },
+                    {
+                        anchor: 'p-3-3',
+                        code: '3.3.',
+                        title: 'Atbalsts un sociālās garantijas karavīriem (NBS), policistiem un glābējiem',
+                        bullets: [
+                            'Nodrošināt pienācīgu atalgojumu, mūsdienīgu ekipējumu un augstas sociālās garantijas Nacionālo bruņoto spēku (NBS) karavīriem, zemessargiem, robežsargiem, policistiem un glābējiem (VUGD)',
+                            'Stiprināt veselības aprūpes, rehabilitācijas un dzīvības un veselības apdrošināšanas sistēmu drošības dienestu darbiniekiem un viņu ģimenes locekļiem',
+                            'Attīstīt profesionālās adaptācijas un pārkvalifikācijas programmas karavīriem un iekšlietu dienestu darbiniekiem pēc dienesta beigām',
+                            'Palīdzēt dienesta veterāniem izmantot savu vadības un organizatorisko pieredzi valsts iestādēs, izglītības sistēmā, jauniešu patriotiskajā audzināšanā un biznesā'
+                        ]
+                    },
+                    {
+                        anchor: 'p-3-4',
+                        code: '3.4.',
+                        title: 'Darbaspēka nodokļu mazināšana un mērķtiecīgs atbalsts maznodrošinātajiem',
+                        bullets: [
+                            'Pakāpeniski mazināt nodokļu slogu darbaspēkam un paaugstināt neapliekamo minimumu, lai strādājošajiem cilvēkiem paliktu vairāk līdzekļu uz rokas',
+                            'Mērķēt nodokļu un sociālo politiku uz reālas labklājības pieaugumu ģimenēm ar bērniem un vidusslānim',
+                            'Pastiprināt mērķtiecīgu sociālo atbalstu cilvēkiem ar zemiem ienākumiem, vientuļajiem pensionāriem un personām ar invaliditāti, garantējot pienācīgu minimālo ienākumu līmeni',
+                            'Pilnveidot mājokļa pabalstu un sociālās palīdzības sistēmu pašvaldībās, padarot to ātru, taisnīgu un pieejamu tiem, kam tā patiešām nepieciešama'
+                        ]
+                    },
+                    {
+                        anchor: 'p-3-5',
+                        code: '3.5.',
+                        title: 'Atbildīga migrācijas politikas kontrole',
+                        bullets: [
+                            'Īstenot stingru, caurskatāmu un konsekventu migrācijas politiku, balstoties uz nacionālās drošības interesēm un reālajām Latvijas darba tirgus vajadzībām',
+                            'Piesaistīt tikai augsti kvalificētus speciālistus deficīta nozarēs pēc stingras drošības dienestu pārbaudes',
+                            'Nodrošināt kontroli pār likumu, kārtības un ārvalstu pilsoņu uzturēšanās noteikumu ievērošanu valstī',
+                            'Prasīt no tiem, kas vēlas dzīvot un strādāt Latvijā, cieņu pret mūsu Satversmi, likumiem, kultūru un tradīcijām, valsts valodas prasmi un gatavību godīgi strādāt valsts labā'
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'cat-4',
+                title: '4. TEHNOLOĢISKĀ ATTĪSTĪBA UN INOVĀCIJAS',
+                items: [
+                    {
+                        anchor: 'p-4-1',
+                        code: '4.1.',
+                        title: 'Mākslīgā intelekta, robotikas un 5G/6G tīklu ieviešana',
+                        bullets: [
+                            'Nodrošināt apsteidzošu mākslīgā intelekta tehnoloģiju, lielo datu analīzes un mākoņrisinājumu ieviešanu ekonomikā, izglītībā un valsts pārvaldē',
+                            'Attīstīt visā Latvijas teritorijā jaunās paaudzes ātrgaitas sakarus (5G un sagatavošanos 6G), novēršot digitālo nevienlīdzību starp pilsētām un laukiem',
+                            'Atbalstīt robotikas, autonomo sistēmu, bezpilota transporta un viedpilsētas (Smart City) risinājumu izstrādi un ieviešanu',
+                            'Turpināt attīstīt elektroniskos valsts un pašvaldību pakalpojumus, lai ikviens iedzīvotājs varētu nokārtot visus jautājumus viedtālrunī pāris minūšu laikā',
+                            'Stiprināt valsts un uzņēmumu kiberdrošību, kā arī pilsoņu personas datu aizsardzību, garantējot, ka tehnoloģijas kalpo cilvēkiem droši un ētiski'
+                        ]
+                    },
+                    {
+                        anchor: 'p-4-2',
+                        code: '4.2.',
+                        title: 'Inovācijas medicīnā, biotehnoloģijās un farmācijā',
+                        bullets: [
+                            'Prioritārā kārtā finansēt un atbalstīt inovācijas, kas vērstas uz iedzīvotāju veselības saglabāšanu un aktīva mūža pagarināšanu',
+                            'Balstīties uz spēcīgajām Latvijas farmācijas un ķīmijas zinātniskajām tradīcijām jaunu oriģinālu zāļu, vakcīnu un mūsdienīgu terapijas metožu radīšanai',
+                            'Attīstīt biotehnoloģijas, ģenētiskos pētījumus un personalizēto medicīnu, apvienojot mākslīgā intelekta iespējas un klīnisko praksi',
+                            'Ieviest modernas medicīnas ierīces, diagnostikas kompleksus un digitālos asistentus, lai palīdzētu ārstiem noteikt precīzas diagnozes'
+                        ]
+                    },
+                    {
+                        anchor: 'p-4-3',
+                        code: '4.3.',
+                        title: 'Valsts atbalsts zinātnei un tehnoloģiju jaunuzņēmumiem',
+                        bullets: [
+                            'Palielināt valsts finansējumu zinātnei un veicināt privātās investīcijas pētniecībā un attīstībā (R&D)',
+                            'Kopā ar valdību, pašvaldībām, universitātēm un biznesu veidot ilgtermiņa Latvijas zinātnes un tehnoloģiju politiku',
+                            'Pilnveidot likumdošanu tehnoloģiju jaunuzņēmumu (startapu), riska kapitāla fondu un zinātnisko atklājumu komercializācijas atbalstam',
+                            'Veidot inovāciju centrus, biznesa inkubatorus un laboratorijas pie augstskolām, palīdzot jaunajiem zinātniekiem un inženieriem dibināt globālus tehnoloģiju uzņēmumus tepat Latvijā',
+                            'Nodrošināt Latvijas pētniekiem un zinātniskajiem centriem pilnvērtīgu atbalstu dalībai starptautiskajās un Eiropas zinātniskajās programmās'
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // Aizvietojiet vārdus un aprakstus uz reālajiem, atstājot attēlu failu nosaukumus
+        const PARTIJAS_BIEDRI = [
+            {
+                id: 'member-1',
+                name: 'Ivans Tulenkovs',
+                role: 'Partijas lideris',
+                photo: 'ruchka3.png',
+                bio: 'Aktīvs «Vienotā Latvija» komandas dalībnieks, kurš strādā pie programmas mērķu īstenošanas.'
+            },
+            {
+                id: 'member-2',
+                name: 'Dmitrijs Starčenkovs',
+                role: 'Politehnisko zinātņu eksperts',
+                photo: 'ruchka2.jpg',
+                bio: 'Aktīvs «Vienotā Latvija» komandas dalībnieks, kurš strādā pie programmas mērķu īstenošanas.'
+            },
+            {
+                id: 'member-3',
+                name: 'Aleksandrs Pnteļejevs',
+                role: 'Reklāmas un mārketinga vadītājs',
+                photo: 'ruchka1.jpg',
+                bio: 'Aktīvs «Vienotā Latvija» komandas dalībnieks, kurš strādā pie programmas mērķu īstenošanas.'
+            },
+            {
+                id: 'member-4',
+                name: 'Eva Bogdanova',
+                role: 'Sabiedrības attiecību speciāliste',
+                photo: 'ruchka4.png',
+                bio: 'Aktīvs «Vienotā Latvija» komandas dalībnieks, kurš strādā pie programmas mērķu īstenošanas.'
+            }
+        ];
+
+        const originalTextStore = new WeakMap();
+
+        function showToast(message) {
+            const box = document.getElementById('toast-box');
+            const textEl = document.getElementById('toast-box-text');
+            if (!box || !textEl) return;
+            textEl.textContent = message;
+            box.classList.remove('hidden');
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => {
+                box.classList.add('hidden');
+            }, 3000);
+        }
+
+        function toggleSatursMenu(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('saturs-menu');
+            const btn = document.getElementById('saturs-btn');
+            if (!menu || !btn) return;
+            const isHidden = menu.classList.contains('hidden');
+            menu.classList.toggle('hidden', !isHidden);
+            btn.setAttribute('aria-expanded', String(isHidden));
+        }
+
+        function closeSatursMenu() {
+            const menu = document.getElementById('saturs-menu');
+            const btn = document.getElementById('saturs-btn');
+            if (menu) menu.classList.add('hidden');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+
+        document.addEventListener('click', (event) => {
+            const menu = document.getElementById('saturs-menu');
+            const btn = document.getElementById('saturs-btn');
+            if (!menu || menu.classList.contains('hidden')) return;
+            if (!menu.contains(event.target) && (!btn || !btn.contains(event.target))) {
+                closeSatursMenu();
+            }
+        });
+
+        function focusSidebarToc() {
+            const panel = document.getElementById('sidebar-toc-panel');
+            if (!panel) return;
+            panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            panel.classList.add('ring-2', 'ring-vl-crimson');
+            setTimeout(() => {
+                panel.classList.remove('ring-2', 'ring-vl-crimson');
+            }, 1400);
+        }
+
+        function downloadProgramHtml() {
+            const a = document.createElement('a');
+            a.href = 'Balso.pdf'; // путь к вашему файлу (например: 'programma.pdf' или 'docs/programma.docx')
+            a.download = 'tautas-programma-vienota-latvija-2026.pdf'; // имя, под которым файл сохранится у пользователя
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('Programma lejupielādēta');
+        }
+        function escapeRegExp(str) {
+            return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function runProgramSearch() {
+            const input = document.getElementById('program-search-input');
+            const summaryRow = document.getElementById('search-summary-row');
+            const summaryLabel = document.getElementById('search-summary-label');
+            const query = (input ? input.value : '').trim();
+
+            document.querySelectorAll('.searchable-copy').forEach(el => {
+                if (originalTextStore.has(el)) {
+                    el.textContent = originalTextStore.get(el);
+                }
+            });
+
+            if (!query) {
+                document.querySelectorAll('.searchable-section').forEach(sec => {
+                    sec.classList.remove('hidden');
+                });
+                if (summaryRow) summaryRow.classList.add('hidden');
+                return;
+            }
+
+            const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+            let matchesCount = 0;
+
+            document.querySelectorAll('.searchable-copy').forEach(el => {
+                const raw = originalTextStore.get(el) || el.textContent;
+                const found = raw.match(regex);
+                if (found) {
+                    matchesCount += found.length;
+                    const escapedRaw = raw
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    const escapedQuery = escapeRegExp(
+                        query
+                            .replace(/&/g, '&amp;')
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                    );
+                    el.innerHTML = escapedRaw.replace(
+                        new RegExp(`(${escapedQuery})`, 'gi'),
+                        '<mark class="vl-mark">$1</mark>'
+                    );
+                }
+            });
+
+            document.querySelectorAll('.searchable-section').forEach(sec => {
+                const hasMark = sec.querySelector('mark.vl-mark') !== null;
+                sec.classList.toggle('hidden', !hasMark);
+            });
+
+            if (summaryRow && summaryLabel) {
+                summaryRow.classList.remove('hidden');
+                summaryLabel.textContent = `Atrasts: ${matchesCount}`;
+            }
+        }
+
+        function clearProgramSearch() {
+            const input = document.getElementById('program-search-input');
+            if (input) input.value = '';
+            runProgramSearch();
+        }
+
+        function renderMembers() {
+            const root = document.getElementById('members-render-root');
+            if (!root) return;
+
+            root.innerHTML = '';
+
+            PARTIJAS_BIEDRI.forEach(member => {
+                const card = document.createElement('article');
+                card.id = member.id;
+                card.className = 'bg-vl-softBg/85 rounded-2xl overflow-hidden border border-vl-border flex flex-col';
+
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'aspect-[4/3] w-full bg-white overflow-hidden border-b border-vl-border';
+
+                const img = document.createElement('img');
+                img.src = member.photo;
+                img.alt = member.name;
+                img.className = 'w-full h-full object-cover object-top select-none';
+                imgWrap.appendChild(img);
+
+                const body = document.createElement('div');
+                body.className = 'p-5 space-y-1.5';
+
+                const role = document.createElement('div');
+                role.className = 'text-xs font-extrabold uppercase tracking-wider text-vl-crimson';
+                role.textContent = member.role;
+
+                const name = document.createElement('h3');
+                name.className = 'searchable-copy text-lg font-black text-vl-graphite';
+                name.textContent = member.name;
+
+                const bio = document.createElement('p');
+                bio.className = 'searchable-copy text-sm text-vl-slateDark leading-relaxed pt-1';
+                bio.textContent = member.bio;
+
+                body.appendChild(role);
+                body.appendChild(name);
+                body.appendChild(bio);
+
+                card.appendChild(imgWrap);
+                card.appendChild(body);
+                root.appendChild(card);
+            });
+        }
+
+        function renderPriorities() {
+            const root = document.getElementById('priorities-render-root');
+            const sidebarTree = document.getElementById('sidebar-priorities-links');
+            const dropdownList = document.getElementById('dropdown-priorities-list');
+            if (!root || !sidebarTree || !dropdownList) return;
+
+            root.innerHTML = '';
+            sidebarTree.innerHTML = '';
+            dropdownList.innerHTML = '';
+
+            PRIORITATES_DATA.forEach((cat, catIndex) => {
+                const ddItem = document.createElement('a');
+                ddItem.href = '#' + cat.id;
+                ddItem.textContent = cat.title;
+                ddItem.onclick = closeSatursMenu;
+                ddItem.className = 'block px-3.5 py-1.5 rounded-xl text-xs font-bold text-vl-graphite hover:bg-vl-crimsonSoft hover:text-vl-crimson transition';
+                dropdownList.appendChild(ddItem);
+
+                const details = document.createElement('details');
+                details.open = catIndex === 0;
+                details.className = 'rounded-xl bg-white/80 border border-vl-border/70 px-2 py-1.5';
+
+                const summary = document.createElement('summary');
+                summary.className = 'cursor-pointer text-xs font-extrabold text-vl-graphite hover:text-vl-crimson py-1 px-1.5 select-none';
+                summary.textContent = cat.title;
+                details.appendChild(summary);
+
+                const linksWrap = document.createElement('div');
+                linksWrap.className = 'mt-1 space-y-0.5 pl-1';
+
+                const catBlock = document.createElement('div');
+                catBlock.id = cat.id;
+                catBlock.className = 'space-y-6 pt-2';
+
+                const catHeading = document.createElement('h3');
+                catHeading.className = 'searchable-section searchable-copy text-xl sm:text-2xl font-black text-vl-graphite pb-2.5 border-b-2 border-vl-crimson/30';
+                catHeading.textContent = cat.title;
+                catBlock.appendChild(catHeading);
+
+                cat.items.forEach(item => {
+                    const navLink = document.createElement('a');
+                    navLink.href = '#' + item.anchor;
+                    navLink.setAttribute('data-nav-id', item.anchor);
+                    navLink.className = 'sidebar-nav-link block px-2.5 py-1.5 rounded-lg text-xs text-vl-slateDark hover:bg-vl-crimsonSoft hover:text-vl-crimson transition leading-snug';
+                    navLink.innerHTML = `<span class="font-bold text-vl-crimson mr-1">${item.code}</span>${item.title}`;
+                    linksWrap.appendChild(navLink);
+
+                    const card = document.createElement('div');
+                    card.id = item.anchor;
+                    card.className = 'searchable-section bg-vl-softBg/85 rounded-2xl p-5 sm:p-6 border border-vl-border space-y-3';
+
+                    const h4 = document.createElement('h4');
+                    h4.className = 'searchable-copy text-base sm:text-lg font-extrabold text-vl-crimson';
+                    h4.textContent = `${item.code} ${item.title}`;
+                    card.appendChild(h4);
+
+                    const ul = document.createElement('ul');
+                    ul.className = 'space-y-2.5 text-sm sm:text-[15px] text-vl-graphite leading-relaxed';
+
+                    item.bullets.forEach(bulletText => {
+                        const li = document.createElement('li');
+                        li.className = 'searchable-copy flex items-start gap-3';
+                        li.innerHTML = `
+                            <span class="w-1.5 h-1.5 rounded-full bg-vl-crimson mt-2.5 shrink-0"></span>
+                            <span class="bullet-label">${bulletText}</span>
+                        `;
+                        ul.appendChild(li);
+                    });
+
+                    card.appendChild(ul);
+                    catBlock.appendChild(card);
+                });
+
+                details.appendChild(linksWrap);
+                sidebarTree.appendChild(details);
+                root.appendChild(catBlock);
+            });
+
+            renderMembers();
+
+            document.querySelectorAll('.searchable-copy').forEach(el => {
+                if (!originalTextStore.has(el)) {
+                    originalTextStore.set(el, el.textContent);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPriorities();
+        });
+    </script>
+</body>
+</html>
